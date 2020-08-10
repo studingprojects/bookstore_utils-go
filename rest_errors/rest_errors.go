@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// RestErr rest error interface
 type RestErr interface {
 	Message() string
 	Status() int
@@ -41,6 +42,7 @@ func (e restErr) Causes() []interface{} {
 	return e.causes
 }
 
+// NewRestError new custom rest error
 func NewRestError(message string, status int, err string, causes []interface{}) RestErr {
 	return restErr{
 		message: message,
@@ -50,6 +52,7 @@ func NewRestError(message string, status int, err string, causes []interface{}) 
 	}
 }
 
+// NewBadRequestError bad request error status:400
 func NewBadRequestError(message string) RestErr {
 	return restErr{
 		message: message,
@@ -58,6 +61,7 @@ func NewBadRequestError(message string) RestErr {
 	}
 }
 
+// NewNotFounfError not found error - status: 404
 func NewNotFounfError(message string) RestErr {
 	return restErr{
 		message: message,
@@ -66,6 +70,7 @@ func NewNotFounfError(message string) RestErr {
 	}
 }
 
+// NewUnauthorizedError unauthorized error - status: 401
 func NewUnauthorizedError(message string) RestErr {
 	return restErr{
 		message: message,
@@ -74,6 +79,7 @@ func NewUnauthorizedError(message string) RestErr {
 	}
 }
 
+// NewInternalServerError internal error - status: 500
 func NewInternalServerError(message string, err error) RestErr {
 	result := restErr{
 		message: message,
@@ -86,6 +92,7 @@ func NewInternalServerError(message string, err error) RestErr {
 	return result
 }
 
+// NewExternalServiceError external call failed - status: 424
 func NewExternalServiceError(message string, err error) RestErr {
 	e := restErr{
 		message: message,
@@ -98,6 +105,7 @@ func NewExternalServiceError(message string, err error) RestErr {
 	return e
 }
 
+// NewNotImplementedError service not implemented yet - status: 501
 func NewNotImplementedError(message string) RestErr {
 	return restErr{
 		message: message,
