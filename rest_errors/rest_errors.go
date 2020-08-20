@@ -14,80 +14,80 @@ type RestErr interface {
 }
 
 type restErr struct {
-	message string        `json:"message"`
-	status  int           `json:"status"`
-	error   string        `json:"error"`
-	causes  []interface{} `json:"causes"`
+	ErrMessage string        `json:"message"`
+	ErrStatus  int           `json:"status"`
+	ErrError   string        `json:"error"`
+	ErrCauses  []interface{} `json:"causes"`
 }
 
 func (e restErr) Error() string {
 	return fmt.Sprintf(
 		"message: %s - status: %d - error: %s - causes [%v]",
-		e.Message(),
-		e.Status(),
-		e.Error(),
-		e.Causes(),
+		e.ErrMessage,
+		e.ErrStatus,
+		e.ErrError,
+		e.ErrCauses,
 	)
 }
 
 func (e restErr) Message() string {
-	return e.message
+	return e.ErrMessage
 }
 
 func (e restErr) Status() int {
-	return e.status
+	return e.ErrStatus
 }
 
 func (e restErr) Causes() []interface{} {
-	return e.causes
+	return e.ErrCauses
 }
 
 // NewRestError new custom rest error
 func NewRestError(message string, status int, err string, causes []interface{}) RestErr {
 	return restErr{
-		message: message,
-		status:  status,
-		error:   err,
-		causes:  causes,
+		ErrMessage: message,
+		ErrStatus:  status,
+		ErrError:   err,
+		ErrCauses:  causes,
 	}
 }
 
 // NewBadRequestError bad request error status:400
 func NewBadRequestError(message string) RestErr {
 	return restErr{
-		message: message,
-		status:  http.StatusBadRequest,
-		error:   "bad_request",
+		ErrMessage: message,
+		ErrStatus:  http.StatusBadRequest,
+		ErrError:   "bad_request",
 	}
 }
 
 // NewNotFounfError not found error - status: 404
 func NewNotFounfError(message string) RestErr {
 	return restErr{
-		message: message,
-		status:  http.StatusNotFound,
-		error:   "not_found",
+		ErrMessage: message,
+		ErrStatus:  http.StatusNotFound,
+		ErrError:   "not_found",
 	}
 }
 
 // NewUnauthorizedError unauthorized error - status: 401
 func NewUnauthorizedError(message string) RestErr {
 	return restErr{
-		message: message,
-		status:  http.StatusUnauthorized,
-		error:   "unauthorized",
+		ErrMessage: message,
+		ErrStatus:  http.StatusUnauthorized,
+		ErrError:   "unauthorized",
 	}
 }
 
 // NewInternalServerError internal error - status: 500
 func NewInternalServerError(message string, err error) RestErr {
 	result := restErr{
-		message: message,
-		status:  http.StatusInternalServerError,
-		error:   "internal_server_error",
+		ErrMessage: message,
+		ErrStatus:  http.StatusInternalServerError,
+		ErrError:   "internal_server_error",
 	}
 	if err != nil {
-		result.causes = append(result.causes, err.Error())
+		result.ErrCauses = append(result.ErrCauses, err.Error())
 	}
 	return result
 }
@@ -95,12 +95,12 @@ func NewInternalServerError(message string, err error) RestErr {
 // NewExternalServiceError external call failed - status: 424
 func NewExternalServiceError(message string, err error) RestErr {
 	e := restErr{
-		message: message,
-		status:  http.StatusFailedDependency,
-		error:   "failed_dependency",
+		ErrMessage: message,
+		ErrStatus:  http.StatusFailedDependency,
+		ErrError:   "failed_dependency",
 	}
 	if err != nil {
-		e.causes = append(e.causes, err.Error())
+		e.ErrCauses = append(e.ErrCauses, err.Error())
 	}
 	return e
 }
@@ -108,8 +108,8 @@ func NewExternalServiceError(message string, err error) RestErr {
 // NewNotImplementedError service not implemented yet - status: 501
 func NewNotImplementedError(message string) RestErr {
 	return restErr{
-		message: message,
-		status:  http.StatusNotImplemented,
-		error:   "not_implemented",
+		ErrMessage: message,
+		ErrStatus:  http.StatusNotImplemented,
+		ErrError:   "not_implemented",
 	}
 }
